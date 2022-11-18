@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/page_diary"
+        android:enabled="true"
+        android:icon="@drawable/dog"
+        android:title="일기"/>
+
+    <item
+        android:id="@+id/page_hospital"
+        android:enabled="true"
+        android:icon="@drawable/map"
+        android:title="동물 병원"/>
+
+    <item
+        android:id="@+id/page_stream"
+        android:enabled="true"
+        android:icon="@drawable/stream"
+        android:title="라이브"/>
+</menu>

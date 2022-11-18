@@ -1,0 +1,25 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/page_diary">
+
+    <fragment
+        android:id="@+id/page_diary"
+        android:name="com.smart_pet.DiaryFragment"
+        android:label="DiaryFragment"
+        tools:layout="@layout/fragment_diary" />
+
+    <fragment
+        android:id="@+id/page_hospital"
+        android:name="com.smart_pet.MapFragment"
+        android:label="MapFragment"
+        tools:layout="@layout/fragment_diary" />
+
+    <fragment
+        android:id="@+id/page_stream"
+        android:name="com.smart_pet.StreamFragment"
+        android:label="StreamFragment"
+        tools:layout="@layout/fragment_diary" />
+
+</navigation>

@@ -48,6 +48,7 @@ public class MapFragment extends Fragment implements MapView.CurrentLocationEven
     private static final String TAG = "kakao map";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
+    private MapView mapView;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
     @Override
@@ -55,7 +56,7 @@ public class MapFragment extends Fragment implements MapView.CurrentLocationEven
                              Bundle savedInstanceState)  {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_map, container, false);
 
-        MapView mapView = new MapView(rootView.getContext());
+        mapView = new MapView(rootView.getContext());
 
         ViewGroup mapViewContainer = (ViewGroup) rootView.findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
@@ -68,7 +69,6 @@ public class MapFragment extends Fragment implements MapView.CurrentLocationEven
             e.printStackTrace();
         }
 
-
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
         if (!checkLocationServicesStatus()) {
             showDialogForLocationServiceSetting();
@@ -76,23 +76,18 @@ public class MapFragment extends Fragment implements MapView.CurrentLocationEven
             checkRunTimePermission();
         }
 
+        addMarker();
+
+        return rootView;
+    }
+
+    private void addMarker(){
         for(Hospital hospital : hospitalList){
             MapPOIItem marker = new MapPOIItem();
             marker.setItemName(hospital.name);
             marker.setTag(0);
 
-            // EPSG:2097 -> WGS84(GEO) 좌표 변환
-            CRSFactory crsFactory = new CRSFactory();
-            //변환할 input 값
-            CoordinateReferenceSystem in = crsFactory.createFromName("epsg:2097");
-            // 원하는 output값
-            CoordinateReferenceSystem WGS84 = crsFactory.createFromParameters("WGS84",
-                    "+proj=longlat +datum=WGS84 +no_defs");
-
-            CoordinateTransformFactory ctFactory = new CoordinateTransformFactory();
-            CoordinateTransform trans = ctFactory.createTransform(in, WGS84);
-            ProjCoordinate result = new ProjCoordinate();
-            trans.transform(new ProjCoordinate(hospital.x, hospital.y), result);
+            ProjCoordinate result = getGeo(hospital);
 
             marker.setMapPoint(MapPoint.mapPointWithGeoCoord(result.y, result.x));
             Log.d("csv", "y: " + result.y + "x: " + result.x);
@@ -101,10 +96,22 @@ public class MapFragment extends Fragment implements MapView.CurrentLocationEven
 
             mapView.addPOIItem(marker);
         }
+    }
 
+    private ProjCoordinate getGeo(Hospital hospital){
+        // EPSG:2097 -> WGS84(GEO) 좌표 변환
+        CRSFactory crsFactory = new CRSFactory();
+        //변환할 input 값
+        CoordinateReferenceSystem in = crsFactory.createFromName("epsg:2097");
+        // 원하는 output값
+        CoordinateReferenceSystem WGS84 = crsFactory.createFromParameters("WGS84",
+                "+proj=longlat +datum=WGS84 +no_defs");
 
-
-        return rootView;
+        CoordinateTransformFactory ctFactory = new CoordinateTransformFactory();
+        CoordinateTransform trans = ctFactory.createTransform(in, WGS84);
+        ProjCoordinate result = new ProjCoordinate();
+        trans.transform(new ProjCoordinate(hospital.x, hospital.y), result);
+        return result;
     }
 
     private void loadData() throws IOException, CsvException {

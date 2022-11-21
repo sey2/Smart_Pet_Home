@@ -1,64 +1,117 @@
 package com.smart_pet;
 
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link StreamFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+
 public class StreamFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public StreamFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment StreamFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static StreamFragment newInstance(String param1, String param2) {
-        StreamFragment fragment = new StreamFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    Button sendBtn;
+    WebView streamWebView;
+    TextView read_textView;
+    private Socket client;
+    private DataOutputStream dataOutput;
+    private DataInputStream dataInput;
+    private final int portNum = 7555;
+    private final String serverIP = "172.20.10.2";  // 라즈베리파이 ip
+    private static int BUF_SIZE = 1024;
+    private static String CONNECT_MSG = "connect";
+    private static String STOP_MSG = "stop";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_stream, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_stream, container, false);
+        sendBtn = rootView.findViewById(R.id.sendBtn);
+        streamWebView = rootView.findViewById(R.id.streamWebView);
+
+        WebSettings webSettings = streamWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+
+        // 화면이 계속 켜짐
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        streamWebView.setWebViewClient(new WebViewClient());
+        //streamWebView.loadUrl("https://naver.com");  // test code
+        streamWebView.loadUrl("http://172.20.10.2:8080/stream");  // 라즈베리 파이 ip 주소
+
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Connect connect = new Connect();
+                connect.execute(CONNECT_MSG);
+            }
+        });
+
+
+
+        return rootView;
+    }
+
+
+    private class Connect extends AsyncTask< String , String,Void > {
+        private String output_message;
+        private String input_message;
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            try {
+                client = new Socket(serverIP, portNum);
+                dataOutput = new DataOutputStream(client.getOutputStream());
+                dataInput = new DataInputStream(client.getInputStream());
+                output_message = strings[0];
+                dataOutput.writeUTF(output_message);
+
+            } catch (UnknownHostException e) {
+                String str = e.getMessage().toString();
+                Log.d("discnt", str + " 1");
+            } catch (IOException e) {
+                String str = e.getMessage().toString();
+                Log.d("discnt", str + " 2");
+            }
+
+            while (true){
+                try {
+                    byte[] buf = new byte[BUF_SIZE];
+                    int read_Byte  = dataInput.read(buf);
+                    input_message = new String(buf, 0, read_Byte);
+                    Log.d("TCP", "받은 메시지:" + input_message);
+                    if (!input_message.equals(STOP_MSG)){
+                        publishProgress(input_message);
+                    }
+                    else{
+                        break;
+                    }
+                    Thread.sleep(2);
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... params){
+            read_textView.setText(""); // Clear the chat box
+            read_textView.append("받은 메세지: " + params[0]);
+        }
     }
 }

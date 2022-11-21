@@ -77,7 +77,8 @@ public class StreamFragment extends Fragment {
                 client = new Socket(serverIP, portNum);
                 dataOutput = new DataOutputStream(client.getOutputStream());
                 dataInput = new DataInputStream(client.getInputStream());
-                output_message = strings[0];
+                // output_message = strings[0];
+                output_message = "turnOn";
                 dataOutput.writeUTF(output_message);
 
             } catch (UnknownHostException e) {

@@ -43,34 +43,6 @@ public class MainActivity extends AppCompatActivity{
         nav_bar = findViewById(R.id.nav_bar);
         NavigationUI.setupWithNavController(nav_bar, nav_host);
 
-        String url = "http://casio2978.dothome.co.kr/PetReceive.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, response -> {
-            try
-            {
-                JSONObject object = new JSONObject(response);
-                Log.d("json", object.toString());
-                JSONArray jsonArray =  object.getJSONArray("result");
-
-                for (int i = 0; i < jsonArray.length()-1; i++)
-                {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Log.d("json", jsonObject.toString());
-
-                    String temp = jsonObject.getString("temp");
-                    String humidity = jsonObject.getString("humidity");
-                    String day = jsonObject.getString("day");
-                    String time = jsonObject.getString("time");
-                    Log.d("json", "temp: " + temp + " humidity: " + humidity + " day: " + day + " time: " + time);
-                }
-            }
-            catch (JSONException e)
-            {
-                e.printStackTrace();
-            }
-        }, error -> Toast.makeText(this, "실패함. 인터넷 연결 확인", Toast.LENGTH_SHORT).show());
-
-        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        requestQueue.add(stringRequest);
 
     }
 

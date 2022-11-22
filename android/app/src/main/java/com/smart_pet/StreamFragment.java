@@ -20,8 +20,12 @@ import android.widget.TextView;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 
 public class StreamFragment extends Fragment {
@@ -31,11 +35,13 @@ public class StreamFragment extends Fragment {
     private Socket client;
     private DataOutputStream dataOutput;
     private DataInputStream dataInput;
-    private final int portNum = 7555;
-    private final String serverIP = "172.20.10.2";  // 라즈베리파이 ip
+    private final int portNum = 2038;
+    private final String serverIP = "172.20.10.4";  // 라즈베리파이 ip
     private static int BUF_SIZE = 1024;
     private static String CONNECT_MSG = "connect";
     private static String STOP_MSG = "stop";
+
+    private boolean flag = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,11 +59,14 @@ public class StreamFragment extends Fragment {
         //streamWebView.loadUrl("https://naver.com");  // test code
         streamWebView.loadUrl("http://172.20.10.2:8080/stream");  // 라즈베리 파이 ip 주소
 
+        // tcp 통신 연결
+        Connect connect = new Connect();
+        connect.execute(CONNECT_MSG);
+
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Connect connect = new Connect();
-                connect.execute(CONNECT_MSG);
+                flag = true;
             }
         });
 
@@ -75,11 +84,17 @@ public class StreamFragment extends Fragment {
         protected Void doInBackground(String... strings) {
             try {
                 client = new Socket(serverIP, portNum);
-                dataOutput = new DataOutputStream(client.getOutputStream());
+                // dataOutput = new DataOutputStream(client.getOutputStream());
                 dataInput = new DataInputStream(client.getInputStream());
-                // output_message = strings[0];
-                output_message = "turnOn";
-                dataOutput.writeUTF(output_message);
+
+                OutputStream sender = client.getOutputStream();
+                output_message = "test";
+                byte[] data = output_message.getBytes();
+                ByteBuffer b = ByteBuffer.allocate(4);
+                b.order(ByteOrder.LITTLE_ENDIAN);
+                b.putInt(data.length);
+                sender.write(b.array(), 0 , 4);
+                sender.write(data);
 
             } catch (UnknownHostException e) {
                 String str = e.getMessage().toString();
@@ -101,6 +116,13 @@ public class StreamFragment extends Fragment {
                     else{
                         break;
                     }
+
+                    if(flag){
+
+                        flag=false;
+                    }
+
+
                     Thread.sleep(2);
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
@@ -111,8 +133,8 @@ public class StreamFragment extends Fragment {
 
         @Override
         protected void onProgressUpdate(String... params){
-            read_textView.setText(""); // Clear the chat box
-            read_textView.append("받은 메세지: " + params[0]);
+           // read_textView.setText(""); // Clear the chat box
+          //  read_textView.append("받은 메세지: " + params[0]);
         }
     }
 }

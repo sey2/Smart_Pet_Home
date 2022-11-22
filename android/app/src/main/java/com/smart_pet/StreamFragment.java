@@ -33,10 +33,10 @@ public class StreamFragment extends Fragment {
     WebView streamWebView;
     TextView read_textView;
     private Socket client;
-    private DataOutputStream dataOutput;
     private DataInputStream dataInput;
-    private final int portNum = 2038;
-    private final String serverIP = "172.20.10.4";  // 라즈베리파이 ip
+    OutputStream sender;
+    private final int portNum = 2091;
+    private final String serverIP = "172.20.10.2";  // 라즈베리파이 ip
     private static int BUF_SIZE = 1024;
     private static String CONNECT_MSG = "connect";
     private static String STOP_MSG = "stop";
@@ -87,7 +87,7 @@ public class StreamFragment extends Fragment {
                 // dataOutput = new DataOutputStream(client.getOutputStream());
                 dataInput = new DataInputStream(client.getInputStream());
 
-                OutputStream sender = client.getOutputStream();
+                sender = client.getOutputStream();
                 output_message = "test";
                 byte[] data = output_message.getBytes();
                 ByteBuffer b = ByteBuffer.allocate(4);
@@ -110,6 +110,20 @@ public class StreamFragment extends Fragment {
                     int read_Byte  = dataInput.read(buf);
                     input_message = new String(buf, 0, read_Byte);
                     Log.d("TCP", "받은 메시지:" + input_message);
+
+                    Log.d("flagcc", String.valueOf(flag));
+
+                    if(flag){
+                        byte[] data = output_message.getBytes();
+                        ByteBuffer b = ByteBuffer.allocate(4);
+                        b.order(ByteOrder.LITTLE_ENDIAN);
+                        b.putInt(data.length);
+                        sender.write(b.array(), 0 , 4);
+                        sender.write(data);
+
+                        flag=false;
+                    }
+
                     if (!input_message.equals(STOP_MSG)){
                         publishProgress(input_message);
                     }
@@ -117,13 +131,9 @@ public class StreamFragment extends Fragment {
                         break;
                     }
 
-                    if(flag){
-
-                        flag=false;
-                    }
 
 
-                    Thread.sleep(2);
+                    Thread.sleep(1);
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -133,8 +143,8 @@ public class StreamFragment extends Fragment {
 
         @Override
         protected void onProgressUpdate(String... params){
-           // read_textView.setText(""); // Clear the chat box
-          //  read_textView.append("받은 메세지: " + params[0]);
+            // read_textView.setText(""); // Clear the chat box
+            //  read_textView.append("받은 메세지: " + params[0]);
         }
     }
 }

@@ -47,12 +47,12 @@ public class DiaryFragment extends Fragment {
 
         loadData();
 
-        DiaryDTO diaryDTO = new DiaryDTO(R.drawable.default_img, "35%", "21C",
-                "2022-11-18", "10:21:20","오전");
-        DiaryDTO diaryDTO1 = new DiaryDTO(R.drawable.default_img, "35%", "21C",
-                "2022-11-18", "10:21:20","오전");
-        recyclerList.add(diaryDTO);
-        recyclerList.add(diaryDTO1);
+//        DiaryDTO diaryDTO = new DiaryDTO(R.drawable.default_img, "35%", "21C",
+//                "2022-11-18", "10:21:20","오전");
+//        DiaryDTO diaryDTO1 = new DiaryDTO(R.drawable.default_img, "35%", "21C",
+//                "2022-11-18", "10:21:20","오전");
+//        recyclerList.add(diaryDTO);
+//        recyclerList.add(diaryDTO1);
         diaryAdapter.listData = recyclerList;
         diaryAdapter.notifyDataSetChanged();
 
@@ -81,6 +81,7 @@ public class DiaryFragment extends Fragment {
                     recyclerList.add(new DiaryDTO(R.drawable.default_img, temp, humidity, day, time, amPm));
                     Log.d("json", "temp: " + temp + " humidity: " + humidity + " day: " + day + " time: " + time);
                 }
+                diaryAdapter.notifyDataSetChanged();
             }
             catch (JSONException e)
             {

@@ -2,10 +2,11 @@ import socket
 from threading import Thread
 import RPi.GPIO as GPIO
 import time
+import sys
 
 # raspberry ip
 HOST = '172.20.10.2'
-PORT = 2036
+PORT = 2091
 
 def receive(s):
     while True:
@@ -15,6 +16,7 @@ def receive(s):
                 break
             decode = data.decode()
             print(decode)
+   
         except:
             pass
 
@@ -30,18 +32,19 @@ def Chat():
         length = int.from_bytes(in_data,"little");
         in_data = connection.recv(length)
         msg = in_data.decode()
-     
+      
         print(msg)
+        print()
    
         th = Thread(target=receive, args=(connection,))
         th.daemon = True
         th.start()
 
         try:
-            while True:
+           while True:
                 message = input()
                 connection.sendall(message.encode())
         finally:
-                    s.close()
+            s.close()
 Chat()
 

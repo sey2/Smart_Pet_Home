@@ -6,7 +6,7 @@ import sys
 
 # raspberry ip
 HOST = '172.20.10.2'
-PORT = 2091
+PORT = 2109
 
 def receive(s):
     while True:
@@ -15,6 +15,10 @@ def receive(s):
             if not data:
                 break
             decode = data.decode()
+
+            if(decode != 'test'):
+                continue
+            
             print(decode)
    
         except:
@@ -47,4 +51,3 @@ def Chat():
         finally:
             s.close()
 Chat()
-

@@ -17,11 +17,16 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
@@ -31,17 +36,7 @@ import java.nio.ByteOrder;
 public class StreamFragment extends Fragment {
     Button sendBtn;
     WebView streamWebView;
-    TextView read_textView;
-    private Socket client;
-    private DataInputStream dataInput;
-    OutputStream sender;
-    private final int portNum = 2091;
-    private final String serverIP = "172.20.10.2";  // 라즈베리파이 ip
-    private static int BUF_SIZE = 1024;
-    private static String CONNECT_MSG = "connect";
-    private static String STOP_MSG = "stop";
-
-    private boolean flag = false;
+    public static boolean flag = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,10 +54,6 @@ public class StreamFragment extends Fragment {
         //streamWebView.loadUrl("https://naver.com");  // test code
         streamWebView.loadUrl("http://172.20.10.2:8080/stream");  // 라즈베리 파이 ip 주소
 
-        // tcp 통신 연결
-        Connect connect = new Connect();
-        connect.execute(CONNECT_MSG);
-
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,81 +61,48 @@ public class StreamFragment extends Fragment {
             }
         });
 
+        new ServerThread().start();
+
 
 
         return rootView;
     }
 
-
-    private class Connect extends AsyncTask< String , String,Void > {
-        private String output_message;
-        private String input_message;
-
+    class ServerThread extends Thread {
         @Override
-        protected Void doInBackground(String... strings) {
+        public void run() {
+            int port = 5003;
+            Socket socket = null;
             try {
-                client = new Socket(serverIP, portNum);
-                // dataOutput = new DataOutputStream(client.getOutputStream());
-                dataInput = new DataInputStream(client.getInputStream());
+                ServerSocket server = new ServerSocket(port);
+                Log.d("ServerThread", "Server Started.");
 
-                sender = client.getOutputStream();
-                output_message = "test";
-                byte[] data = output_message.getBytes();
-                ByteBuffer b = ByteBuffer.allocate(4);
-                b.order(ByteOrder.LITTLE_ENDIAN);
-                b.putInt(data.length);
-                sender.write(b.array(), 0 , 4);
-                sender.write(data);
+                if((socket =server.accept()) != null) {
+                    InetAddress clientHost = socket.getLocalAddress();
+                    int clientPort = socket.getPort();
+                    Log.d("ServerThread", "클라이언트 연결됨. 호스트 : " + clientHost + ", 포트 : " + clientPort);
 
-            } catch (UnknownHostException e) {
-                String str = e.getMessage().toString();
-                Log.d("discnt", str + " 1");
-            } catch (IOException e) {
-                String str = e.getMessage().toString();
-                Log.d("discnt", str + " 2");
-            }
+                    while (true) {
+                        if(flag) {
+                            ObjectOutputStream outstream = new ObjectOutputStream(socket.getOutputStream());
+                            outstream.writeObject("asd" + " from server.");
+                            outstream.flush();
+                            Log.d("ServerThread", "output sent.");
+                            flag = false;
+                        }
 
-            while (true){
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
                 try {
-                    byte[] buf = new byte[BUF_SIZE];
-                    int read_Byte  = dataInput.read(buf);
-                    input_message = new String(buf, 0, read_Byte);
-                    Log.d("TCP", "받은 메시지:" + input_message);
-
-                    Log.d("flagcc", String.valueOf(flag));
-
-                    if(flag){
-                        byte[] data = output_message.getBytes();
-                        ByteBuffer b = ByteBuffer.allocate(4);
-                        b.order(ByteOrder.LITTLE_ENDIAN);
-                        b.putInt(data.length);
-                        sender.write(b.array(), 0 , 4);
-                        sender.write(data);
-
-                        flag=false;
-                    }
-
-                    if (!input_message.equals(STOP_MSG)){
-                        publishProgress(input_message);
-                    }
-                    else{
-                        break;
-                    }
-
-
-
-                    Thread.sleep(1);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+                    socket.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(String... params){
-            // read_textView.setText(""); // Clear the chat box
-            //  read_textView.append("받은 메세지: " + params[0]);
         }
     }
+
 }

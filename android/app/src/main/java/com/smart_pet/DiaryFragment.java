@@ -85,7 +85,7 @@ public class DiaryFragment extends Fragment {
                     String day = jsonObject.getString("day");
                     String time = jsonObject.getString("time");
                     String amPm = parseAmPm(time);
-                    String filename = temp + humidity + day + time;
+                    String filename = temp + humidity.replaceAll("%", "") + day + time;
                     recyclerList.add(new DiaryDTO(R.drawable.default_img, temp, humidity, day, time, amPm, filename));
                     Log.d("json", "temp: " + temp + " humidity: " + humidity + " day: " + day + " time: " + time);
                 }

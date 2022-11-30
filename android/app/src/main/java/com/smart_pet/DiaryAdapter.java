@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class DiaryAdapter extends RecyclerView.Adapter<Holder> {
 
     public ArrayList<DiaryDTO> listData = new ArrayList<>();
-    private View context;
+    public View context;
 
     @NonNull
     @Override
@@ -81,6 +81,7 @@ class Holder extends RecyclerView.ViewHolder{
         dateTextView.setText(diary.getDateText());
         timetextView.setText(diary.getTimeText());
         bobTimeText.setText(diary.getBobTimeText());
+        Log.d("test", diary.getFilename());
         setProfileFromCloud(context, diary.getFilename());
         // Glide.with(context).load(diary.getImg()).into(diaryImageView);
     }
@@ -88,7 +89,8 @@ class Holder extends RecyclerView.ViewHolder{
     private void setProfileFromCloud(View context, String filename){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference imgRef = storageRef.child("Picture/" + filename +".png");
+        Log.d("test", filename);
+        StorageReference imgRef = storageRef.child("/Picture/" + filename);
 
         if(imgRef != null){
             imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {

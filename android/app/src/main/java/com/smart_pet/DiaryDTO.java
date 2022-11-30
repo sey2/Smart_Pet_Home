@@ -8,13 +8,17 @@ public class DiaryDTO {
     private String timeText;
     private String bobTimeText;
 
-    public DiaryDTO(int img, String humidityText, String tempText, String dateText, String timeText, String bobTimeText) {
+    private String filename;
+
+    public DiaryDTO(int img, String humidityText, String tempText, String dateText, String timeText, String bobTimeText,
+                    String filename) {
         this.img = img;
         this.humidityText = humidityText;
         this.tempText = tempText;
         this.dateText = dateText;
         this.timeText = timeText;
         this.bobTimeText = bobTimeText;
+        this.filename = filename;
     }
 
     public void setImg(int img) {
@@ -64,4 +68,6 @@ public class DiaryDTO {
     public String getBobTimeText() {
         return bobTimeText;
     }
+
+    public String getFilename() {return filename;}
 }

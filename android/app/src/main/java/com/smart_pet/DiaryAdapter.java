@@ -1,6 +1,8 @@
 package com.smart_pet;
 
 
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -75,6 +81,29 @@ class Holder extends RecyclerView.ViewHolder{
         dateTextView.setText(diary.getDateText());
         timetextView.setText(diary.getTimeText());
         bobTimeText.setText(diary.getBobTimeText());
-        Glide.with(context).load(diary.getImg()).into(diaryImageView);
+        setProfileFromCloud(context, diary.getFilename());
+        // Glide.with(context).load(diary.getImg()).into(diaryImageView);
     }
+
+    private void setProfileFromCloud(View context, String filename){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference imgRef = storageRef.child("Picture/" + filename +".png");
+
+        if(imgRef != null){
+            imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide.with(context).load(uri).into(diaryImageView);
+                }
+
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("test", e.toString());
+                }
+            });
+        }
+    }
+
 }

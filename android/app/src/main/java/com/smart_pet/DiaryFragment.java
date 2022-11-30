@@ -1,8 +1,10 @@
 package com.smart_pet;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +20,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,7 +75,7 @@ public class DiaryFragment extends Fragment {
                 Log.d("json", object.toString());
                 JSONArray jsonArray =  object.getJSONArray("result");
 
-                for (int i = 0; i < jsonArray.length()-1; i++)
+                for (int i = 0; i < jsonArray.length(); i++)
                 {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     Log.d("json", jsonObject.toString());
@@ -78,7 +85,8 @@ public class DiaryFragment extends Fragment {
                     String day = jsonObject.getString("day");
                     String time = jsonObject.getString("time");
                     String amPm = parseAmPm(time);
-                    recyclerList.add(new DiaryDTO(R.drawable.default_img, temp, humidity, day, time, amPm));
+                    String filename = temp + humidity + day + time;
+                    recyclerList.add(new DiaryDTO(R.drawable.default_img, temp, humidity, day, time, amPm, filename));
                     Log.d("json", "temp: " + temp + " humidity: " + humidity + " day: " + day + " time: " + time);
                 }
                 diaryAdapter.notifyDataSetChanged();
@@ -100,4 +108,5 @@ public class DiaryFragment extends Fragment {
         else if(hour >= 12 && hour < 18) return "점심밥";
         else return "저녁밥";
     }
+
 }

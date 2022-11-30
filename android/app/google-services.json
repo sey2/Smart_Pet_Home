@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "393382427801",
+    "project_id": "smartpetsystem-152cc",
+    "storage_bucket": "smartpetsystem-152cc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:393382427801:android:4ad1c8456c7dbdf03d4c08",
+        "android_client_info": {
+          "package_name": "com.smart_pet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "393382427801-mdsgtic9eu9h5opafhc64po0vv7rtq09.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTo_nYSa1qANzhJ4YQHpX4zWlIjQYfCjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "393382427801-mdsgtic9eu9h5opafhc64po0vv7rtq09.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

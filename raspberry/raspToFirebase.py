@@ -20,11 +20,15 @@ firebase = pyrebase.initialize_app(config)
 #user = auth.sign_in_with_email_and_password("yourid@gmail.com", "????")
 
 #업로드할 파일명
-uploadfile = "/home/pi/20184494.png"
+#uploadfile = "/home/pi/20184494.png"
+uploadfile = "/home/pi/three"
+
 #업로드할 파일의 확장자 구하기
 s = os.path.splitext(uploadfile)[1]
+
 #업로드할 새로운파일이름
-now = datetime.today().strftime("%Y%m%d")
+#now = datetime.today().strftime("%Y%m%d")
+now = '34C902022-12-0321:12'
 filename = now + s 
 
 #Upload files to Firebase

@@ -71,7 +71,7 @@ public class StreamFragment extends Fragment {
     class ServerThread extends Thread {
         @Override
         public void run() {
-            int port = 5003;
+            int port = 2009;
             Socket socket = null;
             try {
                 ServerSocket server = new ServerSocket(port);
@@ -85,7 +85,7 @@ public class StreamFragment extends Fragment {
                     while (true) {
                         if(flag) {
                             ObjectOutputStream outstream = new ObjectOutputStream(socket.getOutputStream());
-                            outstream.writeObject("asd" + " from server.");
+                            outstream.writeObject("1");
                             outstream.flush();
                             Log.d("ServerThread", "output sent.");
                             flag = false;

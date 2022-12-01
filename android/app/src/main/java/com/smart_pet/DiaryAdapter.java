@@ -81,7 +81,7 @@ class Holder extends RecyclerView.ViewHolder{
         dateTextView.setText(diary.getDateText());
         timetextView.setText(diary.getTimeText());
         bobTimeText.setText(diary.getBobTimeText());
-        Log.d("test", diary.getFilename());
+        Log.d("firebase", diary.getFilename() + " set diary");
         setProfileFromCloud(context, diary.getFilename());
         // Glide.with(context).load(diary.getImg()).into(diaryImageView);
     }
@@ -89,20 +89,21 @@ class Holder extends RecyclerView.ViewHolder{
     private void setProfileFromCloud(View context, String filename){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        Log.d("test", filename);
-        StorageReference imgRef = storageRef.child("/Picture/" + filename);
+        Log.d("firebase", filename + " setProfileFromCloude");
+        StorageReference imgRef = storageRef.child("Picture/" + filename);
 
         if(imgRef != null){
             imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
+                    Log.d("firebase", "good");
                     Glide.with(context).load(uri).into(diaryImageView);
                 }
 
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d("test", e.toString());
+                    Log.d("firebase", e.toString());
                 }
             });
         }

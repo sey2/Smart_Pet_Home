@@ -82,7 +82,10 @@ public class MapFragment extends Fragment implements MapView.CurrentLocationEven
     }
 
     private void addMarker(){
+
+        int cnt = 0;
         for(Hospital hospital : hospitalList){
+            if(cnt >= 11) break;
             MapPOIItem marker = new MapPOIItem();
             marker.setItemName(hospital.name);
             marker.setTag(0);
@@ -95,6 +98,7 @@ public class MapFragment extends Fragment implements MapView.CurrentLocationEven
             marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
 
             mapView.addPOIItem(marker);
+            cnt ++;
         }
     }
 

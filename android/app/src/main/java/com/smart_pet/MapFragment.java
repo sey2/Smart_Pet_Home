@@ -85,7 +85,7 @@ public class MapFragment extends Fragment implements MapView.CurrentLocationEven
 
         int cnt = 0;
         for(Hospital hospital : hospitalList){
-            if(cnt >= 11) break;
+            if(cnt >= 20) break;
             MapPOIItem marker = new MapPOIItem();
             marker.setItemName(hospital.name);
             marker.setTag(0);

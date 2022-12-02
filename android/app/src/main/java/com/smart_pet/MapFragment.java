@@ -85,7 +85,8 @@ public class MapFragment extends Fragment implements MapView.CurrentLocationEven
 
         int cnt = 0;
         for(Hospital hospital : hospitalList){
-            if(cnt >= 11) break;
+            Log.d("marker", "addMarker");
+            if(cnt >= 20) break;
             MapPOIItem marker = new MapPOIItem();
             marker.setItemName(hospital.name);
             marker.setTag(0);
@@ -129,7 +130,7 @@ public class MapFragment extends Fragment implements MapView.CurrentLocationEven
         allContent.remove(0);
         for(String content[] : allContent){
             StringBuilder sb = new StringBuilder("");
-           // Log.d("csv", content[19] + " 병원명: " + content[21] + " X: " + content[26] + " Y: " + content[27] );
+            // Log.d("csv", content[19] + " 병원명: " + content[21] + " X: " + content[26] + " Y: " + content[27] );
 
             // 좌표 정보가 없으면 건너 뜀
             if(content[26].equals("") || content[27].equals("")) continue;

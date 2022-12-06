@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 import json
 import os
+from datetime import datetime
 
 config={
 	"apiKey": "AIzaSyCTo_nYSa1qANzhJ4YQHpX4zWlIjQYfCjE", #webkey
@@ -15,29 +16,30 @@ config={
 
 firebase = pyrebase.initialize_app(config)
 
-#Authentication - 필요하면
-#auth = firebase.auth()
-#user = auth.sign_in_with_email_and_password("yourid@gmail.com", "????")
 
-#업로드할 파일명
-#uploadfile = "/home/pi/20184494.png"
-uploadfile = "/home/pi/three"
+def upload(tmp, hum, time):     
+    #업로드할 파일명
+    #uploadfile = "/home/pi/20184494.png"
+    uploadfile = "/home/pi/1.png"
+    tmp = str(tmp).split('.')[0] + 'C'
 
-#업로드할 파일의 확장자 구하기
-s = os.path.splitext(uploadfile)[1]
+    #업로드할 파일의 확장자 구하기
+    s = os.path.splitext(uploadfile)[1]
 
-#업로드할 새로운파일이름
-#now = datetime.today().strftime("%Y%m%d")
-now = '34C902022-12-0321:12'
-filename = now + s 
+    #업로드할 새로운파일이름
+    #now = datetime.today().strftime("%Y%m%d")
+   # now = '34C902022-12-0321:12'
+    t = datetime.now()
+    now = tmp + str(hum).split('.')[0] + t.strftime('%Y-%m-%d') + time
+    filename = now + s 
 
-#Upload files to Firebase
-storage = firebase.storage()
+    #Upload files to Firebase
+    storage = firebase.storage()
 
-storage.child("Picture/"+filename).put(uploadfile)
-fileUrl = storage.child("Picture/"+filename).get_url(1) #0은 저장소 위치 1은 다운로드 url 경로이다.
-#동영상 파일 경로를 알았으니 어디에서든지 참조해서 사용할 수 있다.
-print (fileUrl)
+    storage.child("Picture/"+filename).put(uploadfile)
+    fileUrl = storage.child("Picture/"+filename).get_url(1) #0은 저장소 위치 1은 다운로드 url 경로이다.
+    #동영상 파일 경로를 알았으니 어디에서든지 참조해서 사용할 수 있다.
+    print (fileUrl)
 
 '''
 #업로드한 파일과 다운로드 경로를 database에 저장하자. 그래야 나중에 사용할 수 있다. storage에서 검색은 안된다는 것 같다.

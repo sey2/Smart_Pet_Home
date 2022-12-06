@@ -28,5 +28,5 @@ def startServo():
     time.sleep(3)
     servo.start(0.0)
 
-startServo()
 print("end")
+GPIO.cleanup()

@@ -29,4 +29,3 @@ def startServo():
     servo.start(0.0)
 
 print("end")
-GPIO.cleanup()

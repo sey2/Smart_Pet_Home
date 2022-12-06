@@ -4,6 +4,8 @@ import os
 
 SERVO_MAX_DUTY    = 12   # 서보의 최대(180도) 위치의 주기
 SERVO_MIN_DUTY    = 3    # 서보의 최소(0도) 위치의 주기
+servo_pin = 18
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(servo_pin, GPIO.OUT)     # 서보모터 GPIO.setup
@@ -15,14 +17,16 @@ def setServo(degree): # 서보 위치를 설정하는 함수
     if degree > 180: # 각도는 최대 180도 
         degree = 180
         # 각도를 duty로 변경해주는 것 
-        duty = SERVO_MIN_DUTY +(degree*(SERVO_MAX_DUTY-SERVO_MIN_DUTY)/180.0)
-        print("Degree: {} to {} Duty".format(degree, duty))
-        servo.ChangeDutyCycle(duty) # 변경된 duty값을 서보 PWM에 적용 
+    duty = SERVO_MIN_DUTY +(degree*(SERVO_MAX_DUTY-SERVO_MIN_DUTY)/180.0)
+    print("Degree: {} to {} Duty".format(degree, duty))
+    servo.ChangeDutyCycle(duty) # 변경된 duty값을 서보 PWM에 적용 
 
 def startServo():
     setServo(0)
-    time.sleep(0)
+    time.sleep(3)
     setServo(90)
-    time.sleep(0)
-    servo.stop()
-    GPIO.cleanup()
+    time.sleep(3)
+    servo.start(0.0)
+
+startServo()
+print("end")

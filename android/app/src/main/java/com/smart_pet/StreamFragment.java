@@ -71,7 +71,7 @@ public class StreamFragment extends Fragment {
     class ServerThread extends Thread {
         @Override
         public void run() {
-            int port = 5003;
+            int port = 5069;
             Socket socket = null;
             try {
                 ServerSocket server = new ServerSocket(port);

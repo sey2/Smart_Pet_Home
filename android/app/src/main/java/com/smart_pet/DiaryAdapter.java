@@ -96,10 +96,9 @@ class Holder extends RecyclerView.ViewHolder{
             imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Log.d("firebase", "good");
+                    Log.d("firebase", uri.toString());
                     Glide.with(context).load(uri).into(diaryImageView);
                 }
-
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {

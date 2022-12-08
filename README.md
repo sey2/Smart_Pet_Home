@@ -12,7 +12,7 @@ Raspberry Pi Final Project
 * 📦 Smart_Pet_Home
       └─📂Raspberry Pi
          ├─ 📃 python
-         ├─ 📃 DHT11.py (온습도 측정)
+         ├─ 📃 DHT11.py
          ├─ 📃 RaspToDatabase.py
          ├─ 📃 Servo.py
          ├─ 📃 TTS.py

@@ -11,9 +11,9 @@ Raspberry Pi Final Project
 ```bash
 * 📦 Smart_Pet_Home
       └─📂Raspberry Pi
-         ├─ 📃  python
-         ├─ 📃  DHT11.py (온습도 측정)
-         ├─ 📃  RaspToDatabase.py
+         ├─ 📃 python
+         ├─ 📃 DHT11.py (온습도 측정)
+         ├─ 📃 RaspToDatabase.py
          ├─ 📃 Servo.py
          ├─ 📃 TTS.py
          ├─ 📃 selenium.py

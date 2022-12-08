@@ -18,5 +18,5 @@ Raspberry Pi Final Project
          ├─ 📃 TTS.py
          ├─ 📃 selenium.py
          ├─ 📃 RaspToFirebase.py
-         └────
+         └───────
 ```

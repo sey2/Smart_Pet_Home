@@ -11,7 +11,7 @@ Raspberry Pi Final Project
 ```bash
 * 📦 Smart_Pet_Home
       └─📂Raspberry Pi
-         ├─ 📃 python
+         ├─ 📃 Main.py
          ├─ 📃 DHT11.py
          ├─ 📃 RaspToDatabase.py
          ├─ 📃 Servo.py

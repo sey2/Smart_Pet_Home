@@ -20,7 +20,7 @@ Raspberry Pi Final Project
          ├─ 📃 RaspToFirebase.py
          └───────
 ```
-
+```bash
 * 📦Smart_Pet_Home
       └─📂app
          ├─📂java
@@ -40,3 +40,4 @@ Raspberry Pi Final Project
          │   ├─📃 fragment_stream.xml
          │   ├─📃 recycler_item.xml
          └────       
+```

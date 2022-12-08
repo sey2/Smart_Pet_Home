@@ -9,7 +9,7 @@ Raspberry Pi Final Project
 
 
 ```bash
-* 📦diary
+* 📦 Smart_Pet_Home
       └─📂Raspberry Pi
          ├─ 📃  python
          ├─ 📃  DHT11.py (온습도 측정)

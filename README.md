@@ -16,7 +16,7 @@ Raspberry Pi Final Project
          ├─ 📃 RaspToDatabase.py
          ├─ 📃 Servo.py
          ├─ 📃 TTS.py
-         ├─ 📃 selenium.py
+         ├─ 📃 WebCapture.py
          ├─ 📃 RaspToFirebase.py
          └───────
 ```

@@ -20,3 +20,23 @@ Raspberry Pi Final Project
          ├─ 📃 RaspToFirebase.py
          └───────
 ```
+
+* 📦Smart_Pet_Home
+      └─📂app
+         ├─📂java
+         │ ├─📂com.smart_pet
+         │  ├─📃 DiaryAdapter.java
+         │  ├─📃 DiaryDTO
+         │  ├─📃 DiaryFragment
+         │  ├─📃 Hospital
+         │  ├─📃 MapFragment
+         │  ├─📃 ReceiveData
+         │  └─📃 StreamFragment
+         ├─📂res
+         │  ├─📂layout
+         │   ├─📃 activity_main.xml
+         │   ├─📃 fragment_diary.xml
+         │   ├─📃 fragment_map.xml
+         │   ├─📃 fragment_stream.xml
+         │   ├─📃 recycler_item.xml
+         └────       

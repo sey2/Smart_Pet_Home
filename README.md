@@ -1,6 +1,8 @@
 # Smart_Pet_Home
 Raspberry Pi Final Project
 
+![Process](https://user-images.githubusercontent.com/54762273/209937330-3b89ebfc-75d1-4de3-8991-0c783f6987ab.jpg)
+
 ---
 좌표계 변환
 
